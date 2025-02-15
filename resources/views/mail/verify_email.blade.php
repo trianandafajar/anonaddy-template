@@ -1,6 +1,6 @@
 @component('mail::message')
 
-# Hello!
+# Hai!
 
 Please click the button below to verify your email address.
 
