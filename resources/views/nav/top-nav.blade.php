@@ -1,86 +1,71 @@
 @auth
-<div class="bg-white shadow p-4 flex justify-between items-center">
-            <div class="col">
-
-            </div>
-            <div class="col flex">
-                <!-- Right side content: Upgrade button -->
-                <span class="px-4 py-2 upgrade-btn">Upgrade</span>
-
-                <dropdown class="" username="{{ user()->username }}">
-                    <ul>
-                        <li>
-                            <a href="{{ route('settings.show') }}" class="block px-4 py-2 hover:bg-indigo-500 hover:text-white">Settings </a>
-                        </li>
-                        <li>
-                            <form action="{{ route('logout') }}" method="POST" class="block">
-                                {{ csrf_field() }}
-                                <input type="submit" class="w-full px-4 py-2 bg-transparent hover:bg-indigo-500 hover:text-white cursor-pointer text-left" value="{{ __('Logout') }}">
-                            </form>
-                        </li>
-                    </ul>
-                </dropdown>
-            </div>
-            
-  </div>
-
-  
-{{-- <nav class="bg-indigo-900 py-4 shadow">
-    <div class="container flex items-center justify-between flex-wrap">
-        <div class="flex items-center shrink-0 text-white mr-6">
-            <a href="{{ route('aliases.index') }}">
-                <img class="h-6" alt="AnonAddy Logo" src="/svg/icon-logo.svg">
-            </a>
-        </div>
-        <div class="block md:hidden">
-            <button @click="mobileNavActive = !mobileNavActive" class="flex items-center px-3 py-2 border rounded text-indigo-200 border-indigo-400 hover:text-white hover:border-white focus:outline-none">
-            <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
-            </button>
-        </div>
-        <div class="w-full grow md:flex md:items-center md:w-auto" :class="mobileNavActive ? 'block' : 'hidden'">
-            <div class="text-base md:grow">
-                <a href="{{ route('aliases.index') }}" class="block mt-4 md:inline-block md:mt-0 hover:text-white mr-4 {{ Route::currentRouteNamed('aliases.index') ? 'text-white' : 'text-indigo-100' }}">
-                    Aliases
-                </a>
-                <a href="{{ route('recipients.index') }}" class="block mt-4 md:inline-block md:mt-0 hover:text-white mr-4 {{ Route::currentRouteNamed('recipients.index') ? 'text-white' : 'text-indigo-100' }}">
-                    Recipients
-                </a>
-                <a href="{{ route('domains.index') }}" class="block mt-4 md:inline-block md:mt-0 hover:text-white mr-4 {{ Route::currentRouteNamed('domains.index') ? 'text-white' : 'text-indigo-100' }}">
-                    Domains
-                </a>
-                <a href="{{ route('usernames.index') }}" class="block mt-4 md:inline-block md:mt-0 hover:text-white mr-4 {{ Route::currentRouteNamed('usernames.index') ? 'text-white' : 'text-indigo-100' }}">
-                    Usernames
-                </a>
-                <a href="{{ route('failed_deliveries.index') }}" class="block mt-3 md:inline-block md:mt-0 hover:text-white mr-4 {{ Route::currentRouteNamed('failed_deliveries.index') ? 'text-white' : 'text-indigo-100' }}">
-                    Failed Deliveries
-                </a>
-                <a href="{{ route('rules.index') }}" class="block mt-4 md:inline-block md:mt-0 hover:text-white mr-4 {{ Route::currentRouteNamed('rules.index') ? 'text-white' : 'text-indigo-100' }}">
-                    Rules
-                </a>
-
-                <a href="{{ route('settings.show') }}" class="block md:hidden mt-4 hover:text-white mr-4 {{ Route::currentRouteNamed('settings.show') ? 'text-white' : 'text-indigo-100' }}">
-                    Settings
-                </a>
-                <form action="{{ route('logout') }}" method="POST" class="block md:hidden">
-                    {{ csrf_field() }}
-                    <input type="submit" class="bg-transparent block text-indigo-100 mt-4 hover:text-white mr-4" value="{{ __('Logout') }}">
-                </form>
-            </div>
-            <button class="badge badge-success">Upgrade</button>
-            <dropdown class="hidden md:block" username="{{ user()->username }}">
-                <ul>
-                    <li>
-                        <a href="{{ route('settings.show') }}" class="block px-4 py-2 hover:bg-indigo-500 hover:text-white">Settings </a>
-                    </li>
-                    <li>
-                        <form action="{{ route('logout') }}" method="POST" class="block">
-                            {{ csrf_field() }}
-                            <input type="submit" class="w-full px-4 py-2 bg-transparent hover:bg-indigo-500 hover:text-white cursor-pointer text-left" value="{{ __('Logout') }}">
-                        </form>
-                    </li>
-                </ul>
-            </dropdown>
-        </div>
+<!-- Top Bar -->
+<div x-data="{ mobileNavActive: false }" class="bg-white shadow p-4 flex justify-between items-center">
+    <!-- Left (Logo or blank) -->
+    <div class="flex items-center gap-4">
+        <a href="{{ route('aliases.index') }}">
+            <img class="h-6" alt="Logo" src="/svg/icon-logo.svg">
+        </a>
+        <button class="block md:hidden" @click="mobileNavActive = !mobileNavActive">
+            <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+            </svg>
+        </button>
     </div>
-</nav> --}}
+
+    <!-- Right (Upgrade + Dropdown) -->
+    <div class="flex items-center gap-4">
+        <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm hidden md:inline-block">Upgrade</span>
+        <dropdown username="{{ user()->username }}">
+            <ul>
+                <li>
+                    <a href="{{ route('settings.show') }}" class="block px-4 py-2 hover:bg-indigo-500 hover:text-white">Settings</a>
+                </li>
+                <li>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <input type="submit" class="w-full px-4 py-2 bg-transparent hover:bg-indigo-500 hover:text-white cursor-pointer text-left" value="{{ __('Logout') }}">
+                    </form>
+                </li>
+            </ul>
+        </dropdown>
+    </div>
+</div>
+
+<!-- Navigation Menu -->
+<nav class="bg-indigo-900 text-sm text-indigo-100 px-4 py-3 md:flex md:justify-between md:items-center" :class="mobileNavActive ? 'block' : 'hidden'" x-cloak>
+    @php
+        $navItems = [
+            ['route' => 'aliases.index', 'label' => 'Aliases'],
+            ['route' => 'recipients.index', 'label' => 'Recipients'],
+            ['route' => 'domains.index', 'label' => 'Domains'],
+            ['route' => 'usernames.index', 'label' => 'Usernames'],
+            ['route' => 'failed_deliveries.index', 'label' => 'Failed Deliveries'],
+            ['route' => 'rules.index', 'label' => 'Rules'],
+        ];
+    @endphp
+
+    <div class="flex flex-col md:flex-row md:items-center gap-4">
+        @foreach ($navItems as $item)
+            <a href="{{ route($item['route']) }}"
+                class="hover:text-white {{ Route::currentRouteNamed($item['route']) ? 'text-white' : 'text-indigo-100' }}">
+                {{ $item['label'] }}
+            </a>
+        @endforeach
+    </div>
+
+    <!-- Mobile Settings & Logout (optional) -->
+    <div class="block md:hidden mt-4">
+        <a href="{{ route('settings.show') }}"
+            class="block px-4 py-2 hover:text-white {{ Route::currentRouteNamed('settings.show') ? 'text-white' : 'text-indigo-100' }}">
+            Settings
+        </a>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <input type="submit"
+                class="w-full px-4 py-2 bg-transparent hover:text-white cursor-pointer text-left"
+                value="{{ __('Logout') }}">
+        </form>
+    </div>
+</nav>
 @endauth
