@@ -6,13 +6,29 @@ class ShowFailedDeliveryController extends Controller
 {
     public function index()
     {
+        $failedDeliveries = user()
+            ->failedDeliveries()
+            ->with([
+                'recipient:id,email',
+                'alias:id,email',
+            ])
+            ->select([
+                'id',
+                'alias_id',
+                'recipient_id',
+                'sender',
+                'remote_mta',
+                'bounce_type',
+                'code',
+                'attempted_at',
+                'is_stored',
+                'created_at',
+            ])
+            ->latest()
+            ->get();
+
         return view('failed_deliveries.index', [
-            'failedDeliveries' => user()
-                ->failedDeliveries()
-                ->with(['recipient:id,email', 'alias:id,email'])
-                ->select(['alias_id', 'bounce_type', 'code', 'attempted_at', 'created_at', 'id', 'recipient_id', 'remote_mta', 'sender', 'is_stored'])
-                ->latest()
-                ->get(),
+            'failedDeliveries' => $failedDeliveries,
         ]);
     }
 }
