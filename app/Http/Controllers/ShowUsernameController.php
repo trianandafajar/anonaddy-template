@@ -6,13 +6,15 @@ class ShowUsernameController extends Controller
 {
     public function index()
     {
-        return view('usernames.index', [
-            'usernames' => user()
-                ->usernames()
-                ->with('defaultRecipient:id,email')
-                ->withCount('aliases')
-                ->latest()
-                ->get(),
-        ]);
+        $usernames = user()
+            ->usernames()
+            ->with([
+                'defaultRecipient:id,email',
+            ])
+            ->withCount('aliases')
+            ->latest()
+            ->get();
+
+        return view('usernames.index', compact('usernames'));
     }
 }
