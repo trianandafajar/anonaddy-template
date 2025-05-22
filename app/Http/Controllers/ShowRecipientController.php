@@ -12,26 +12,29 @@ class ShowRecipientController extends Controller
             'usernamesUsingAsDefault.aliases:id,aliasable_id,email',
         ])->latest()->get();
 
-        $recipients->each(function ($recipient) {
-            if ($recipient->domainsUsingAsDefault) {
-                $domainAliases = $recipient->domainsUsingAsDefault->flatMap(function ($domain) {
-                    return $domain->aliases;
-                });
-                $recipient->setRelation('aliases', $recipient->aliases->concat($domainAliases)->unique('email'));
-            }
-
-            if ($recipient->usernamesUsingAsDefault) {
-                $usernameAliases = $recipient->usernamesUsingAsDefault->flatMap(function ($domain) {
-                    return $domain->aliases;
-                });
-                $recipient->setRelation('aliases', $recipient->aliases->concat($usernameAliases)->unique('email'));
-            }
-        });
-
         $count = $recipients->count();
 
-        $recipients->each(function ($item, $key) use ($count) {
-            $item['key'] = $count - $key;
+        $recipients->each(function ($recipient, $key) use ($count) {
+            // Gabungkan alias dari domain default
+            if ($recipient->domainsUsingAsDefault) {
+                $domainAliases = $recipient->domainsUsingAsDefault->flatMap->aliases;
+                $recipient->setRelation(
+                    'aliases',
+                    $recipient->aliases->concat($domainAliases)->unique('email')
+                );
+            }
+
+            // Gabungkan alias dari username default
+            if ($recipient->usernamesUsingAsDefault) {
+                $usernameAliases = $recipient->usernamesUsingAsDefault->flatMap->aliases;
+                $recipient->setRelation(
+                    'aliases',
+                    $recipient->aliases->concat($usernameAliases)->unique('email')
+                );
+            }
+
+            // Tambahkan urutan kebalik (semacam index terbalik)
+            $recipient['key'] = $count - $key;
         });
 
         return view('recipients.index', [
