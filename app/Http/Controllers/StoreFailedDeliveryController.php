@@ -8,12 +8,14 @@ class StoreFailedDeliveryController extends Controller
 {
     public function update(UpdateStoreFailedDeliveryRequest $request)
     {
-        if ($request->store_failed_deliveries) {
-            user()->update(['store_failed_deliveries' => true]);
-        } else {
-            user()->update(['store_failed_deliveries' => false]);
-        }
+        user()->update([
+            'store_failed_deliveries' => (bool) $request->store_failed_deliveries,
+        ]);
 
-        return back()->with(['status' => $request->store_failed_deliveries ? 'Store Failed Deliveries Enabled Successfully' : 'Store Failed Deliveries Disabled Successfully']);
+        $status = $request->store_failed_deliveries
+            ? 'Store Failed Deliveries Enabled Successfully'
+            : 'Store Failed Deliveries Disabled Successfully';
+
+        return back()->with('status', $status);
     }
 }
